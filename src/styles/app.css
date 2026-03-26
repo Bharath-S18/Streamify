@@ -1,0 +1,45 @@
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.player-frame {
+  border: none;
+  min-height: 360px;
+  border-radius: 12px;
+}
+
+@media (min-width: 768px) {
+  .player-frame {
+    min-height: 520px;
+  }
+}
+
+.row-fade {
+  position: relative;
+}
+
+.row-fade::before,
+.row-fade::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 8px;
+  width: 26px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.row-fade::before {
+  left: -1px;
+  background: linear-gradient(90deg, rgba(11, 18, 32, 1), rgba(11, 18, 32, 0));
+}
+
+.row-fade::after {
+  right: -1px;
+  background: linear-gradient(270deg, rgba(11, 18, 32, 1), rgba(11, 18, 32, 0));
+}
