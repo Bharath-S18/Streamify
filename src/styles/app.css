@@ -96,6 +96,21 @@
   cursor: pointer;
 }
 
+.top10-card img {
+  transition: transform 300ms ease-out, filter 300ms ease-out;
+}
+
+.top10-card:hover img {
+  transform: scale(1.05) translateY(-8px);
+  filter: brightness(1.1);
+}
+
+.top10-card:hover .top10-rank {
+  -webkit-text-stroke: 2px rgba(239, 68, 68, 1);
+  text-stroke: 2px rgba(239, 68, 68, 1);
+  transform: scale(1.15);
+}
+
 .top10-rank {
   position: absolute;
   left: -20px;
@@ -107,4 +122,5 @@
   color: transparent;
   -webkit-text-stroke: 2px rgba(239, 68, 68, 0.7);
   text-stroke: 2px rgba(239, 68, 68, 0.7);
+  transition: all 300ms ease-out;
 }

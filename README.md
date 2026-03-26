@@ -1,70 +1,117 @@
-# Getting Started with Create React App
+# Streamify
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Streamify is a modern movie and TV discovery web app built with React + Vite. It uses TMDB data to let users browse trending content, search titles, and watch trailers in a clean streaming-style UI.
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+- Hero banner with featured content
+- Movie/show rows by category
+- Reusable cards and modal previews
+- Search experience with debounced input
+- Watch page/player flow
+- "Similar titles" recommendations
+- Persistent UI state with local storage hooks
+- Responsive layout for desktop and mobile
 
-### `npm start`
+## 🧱 Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React (Vite)
+- React Router
+- Tailwind CSS + PostCSS
+- TMDB API
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 📁 Project Structure
 
-### `npm test`
+```text
+src/
+	components/
+		CastRow.jsx
+		HeroBanner.jsx
+		Modal.jsx
+		MovieCard.jsx
+		MovieRow.jsx
+		Navbar.jsx
+		Player.jsx
+		SimilarRow.jsx
+	hooks/
+		useDebounce.js
+		useLocalStorage.js
+	pages/
+		Home.jsx
+		Search.jsx
+		Watch.jsx
+	services/
+		api.js
+		tmdb.js
+	styles/
+		app.css
+	App.jsx
+	index.css
+	main.jsx
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🚀 Getting Started
 
-### `npm run build`
+### 1) Clone
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Clone this repository to your machine.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 2) Install dependencies
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Install packages with npm.
 
-### `npm run eject`
+### 3) Configure environment variables
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Create a `.env` file at the project root (if not already present):
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```env
+VITE_TMDB_API_KEY=your_tmdb_api_key_here
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+> Vite exposes only variables prefixed with `VITE_` to client code.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 4) Run in development
 
-## Learn More
+Start the Vite dev server and open the local URL shown in terminal.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📦 Build for Production
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Generate an optimized production build. Output goes to the `build/` folder in this project.
 
-### Code Splitting
+## 🧪 Lint / Quality
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Run linting to catch common code issues before pushing changes.
 
-### Analyzing the Bundle Size
+## 🖼️ Screenshots
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Add screenshots here after hosting assets, for example:
 
-### Making a Progressive Web App
+- Home page
+- Search page
+- Watch page
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 🌍 Deployment
 
-### Advanced Configuration
+This app can be deployed to any static hosting platform (for example Vercel, Netlify, GitHub Pages, or Azure Static Web Apps).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Typical flow:
 
-### Deployment
+1. Build the app
+2. Deploy the build output directory
+3. Add `VITE_TMDB_API_KEY` in host environment variables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🛣️ Roadmap Ideas
 
-### `npm run build` fails to minify
+- Authentication and user profiles
+- Watchlist / favorites sync
+- Genre and language filters
+- Infinite scroll / pagination
+- Better accessibility and keyboard navigation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🤝 Contributing
+
+Contributions are welcome! Open an issue for ideas/bugs or submit a pull request.
+
+## 📄 License
+
+This project is available under the MIT License.

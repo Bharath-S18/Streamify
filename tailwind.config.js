@@ -15,6 +15,15 @@ module.exports = {
       },
       boxShadow: {
         glow: "0 10px 30px rgba(229, 9, 20, 0.25)"
+      },
+      animation: {
+        "fade-in": "fadeIn 500ms ease-out"
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" }
+        }
       }
     }
   },

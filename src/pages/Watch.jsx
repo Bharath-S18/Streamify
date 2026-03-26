@@ -44,7 +44,7 @@ const Watch = () => {
   }, [storageKey]);
 
   return (
-    <div className="pb-8">
+    <div className="pb-8 pt-20">
       <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-3 px-4 pt-6 md:px-8">
         <Link className="text-sm text-zinc-400 transition hover:text-white" to="/">
           ← Back to browse

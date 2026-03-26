@@ -66,7 +66,7 @@ const Search = () => {
   const myListIds = new Set(myList.map((item) => `${item.type}-${item.id}`));
 
   return (
-    <main className="mx-auto w-full max-w-[1400px] space-y-5 px-4 py-5 md:px-8 md:py-7">
+    <main className="mx-auto w-full max-w-[1400px] space-y-5 px-4 py-5 md:px-8 md:py-7 pt-20">
       <h1 className="text-2xl font-bold text-white md:text-3xl">Search Results</h1>
       <div className="rounded-lg border border-white/10 bg-app-card p-3">
         <input

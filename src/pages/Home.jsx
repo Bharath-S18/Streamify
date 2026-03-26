@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import HeroBanner from "../components/HeroBanner";
 import Modal from "../components/Modal";
 import MovieRow from "../components/MovieRow";
+import Top10Card from "../components/Top10Card";
 import {
   getMovieGenres,
   getMoviesByGenre,
@@ -96,28 +97,54 @@ const Home = () => {
   };
 
   return (
-    <main className="space-y-10 pb-10">
-      <HeroBanner movie={featuredMovie} onOpen={setSelectedMovie} />
+    <main className="space-y-0 pb-10">
+      <HeroBanner movie={featuredMovie} movies={rows.trending} onOpen={setSelectedMovie} />
+      <div className="space-y-10">
 
       {!loading && rows.trending.length > 0 && (
         <section className="relative mx-auto w-full max-w-[1600px] px-4 md:px-10">
-          <div className="mb-4 flex items-end gap-4">
+          <div className="mb-6 flex items-end gap-4">
             <h2 className="top10-title">TOP 10</h2>
-            <p className="pb-3 text-xl font-semibold tracking-[0.4em] text-zinc-100">CONTENT TODAY</p>
+            <p className="pb-3 text-lg font-semibold tracking-[0.3em] text-zinc-100">CONTENT TODAY</p>
           </div>
 
-          <div className="no-scrollbar flex gap-6 overflow-x-auto pb-4">
-            {rows.trending.slice(0, 10).map((movie, index) => (
-              <button
-                key={`top10-${movie.id}`}
-                type="button"
-                onClick={() => setSelectedMovie(movie)}
-                className="top10-card group"
-              >
-                <span className="top10-rank">{index + 1}</span>
-                <img src={movie.posterUrl} alt={movie.title} loading="lazy" className="relative z-10 h-[340px] w-[230px] rounded-2xl object-cover shadow-2xl transition duration-300 group-hover:-translate-y-1" />
-              </button>
-            ))}
+          <div className="relative">
+            {/* Left Arrow */}
+            <button
+              onClick={(e) => {
+                const container = e.currentTarget.nextElementSibling;
+                container?.scrollBy({ left: -window.innerWidth * 0.8, behavior: "smooth" });
+              }}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-black/60 hover:bg-red-600 text-white p-3 rounded-full transition duration-300 opacity-0 hover:opacity-100 focus:opacity-100"
+              style={{ transform: "translate(-50%, -50%)" }}
+              aria-label="Scroll left"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+            </button>
+
+            <div className="scroll-container no-scrollbar flex gap-8 overflow-x-auto px-4 pb-4">
+              {rows.trending.slice(0, 10).map((movie, index) => (
+                <Top10Card
+                  key={`top10-${movie.id}`}
+                  index={index + 1}
+                  movie={movie}
+                  onClick={setSelectedMovie}
+                />
+              ))}
+            </div>
+
+            {/* Right Arrow */}
+            <button
+              onClick={(e) => {
+                const container = e.currentTarget.previousElementSibling;
+                container?.scrollBy({ left: window.innerWidth * 0.8, behavior: "smooth" });
+              }}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-black/60 hover:bg-red-600 text-white p-3 rounded-full transition duration-300 opacity-0 hover:opacity-100 focus:opacity-100"
+              style={{ transform: "translate(50%, -50%)" }}
+              aria-label="Scroll right"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+            </button>
           </div>
         </section>
       )}
@@ -149,6 +176,7 @@ const Home = () => {
         </div>
       )}
 
+      </div>
       <Modal
         movie={selectedMovie}
         onClose={() => setSelectedMovie(null)}
