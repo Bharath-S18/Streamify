@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import HeroBanner from "../components/HeroBanner";
 import Modal from "../components/Modal";
 import MovieRow from "../components/MovieRow";
+import SectionHeader from "../components/SectionHeader";
 import Top10Card from "../components/Top10Card";
 import {
   getMovieGenres,
@@ -103,10 +104,7 @@ const Home = () => {
 
       {!loading && rows.trending.length > 0 && (
         <section className="relative mx-auto w-full max-w-[1600px] px-4 md:px-10">
-          <div className="mb-6 flex items-end gap-4">
-            <h2 className="top10-title">TOP 10</h2>
-            <p className="pb-3 text-lg font-semibold tracking-[0.3em] text-zinc-100">CONTENT TODAY</p>
-          </div>
+          <SectionHeader />
 
           <div className="relative">
             {/* Left Arrow */}
@@ -164,12 +162,33 @@ const Home = () => {
         </div>
       ) : (
         <div className="mx-auto w-full max-w-[1600px] space-y-10 px-4 md:px-10">
-          <MovieRow title="Trending Now" items={rows.trending} onCardClick={setSelectedMovie} />
-          <MovieRow title="Popular on Streamify" items={rows.popular} onCardClick={setSelectedMovie} />
-          <MovieRow title="Top Rated" items={rows.topRated} onCardClick={setSelectedMovie} />
+          <MovieRow
+            title="Trending Now"
+            category="trending"
+            items={rows.trending}
+            onCardClick={setSelectedMovie}
+          />
+          <MovieRow
+            title="Popular on Streamify"
+            category="popular"
+            items={rows.popular}
+            onCardClick={setSelectedMovie}
+          />
+          <MovieRow
+            title="Top Rated"
+            category="topRated"
+            items={rows.topRated}
+            onCardClick={setSelectedMovie}
+          />
 
           {genreRows.map((genre) => (
-            <MovieRow key={genre.id} title={genre.name} items={genre.items} onCardClick={setSelectedMovie} />
+            <MovieRow
+              key={genre.id}
+              title={genre.name}
+              items={genre.items}
+              onCardClick={setSelectedMovie}
+              genreId={genre.id}
+            />
           ))}
 
           {myList.length > 0 && <MovieRow title="My List" items={myList} onCardClick={setSelectedMovie} />}

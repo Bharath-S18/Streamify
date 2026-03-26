@@ -61,6 +61,21 @@ export const getTopRatedMovies = async () => {
   return (data.results || []).map((item) => normalizeMedia(item, "movie"));
 };
 
+export const getTrendingSeries = async () => {
+  const data = await request("/trending/tv/week", { language: "en-US" });
+  return (data.results || []).map((item) => normalizeMedia(item, "tv"));
+};
+
+export const getPopularSeries = async () => {
+  const data = await request("/tv/popular", { language: "en-US", page: 1 });
+  return (data.results || []).map((item) => normalizeMedia(item, "tv"));
+};
+
+export const getTopRatedSeries = async () => {
+  const data = await request("/tv/top_rated", { language: "en-US", page: 1 });
+  return (data.results || []).map((item) => normalizeMedia(item, "tv"));
+};
+
 export const getMovieGenres = async () => {
   const data = await request("/genre/movie/list", { language: "en-US" });
   return data.genres || [];
@@ -75,6 +90,17 @@ export const getMoviesByGenre = async (genreId) => {
     include_adult: false
   });
   return (data.results || []).map((item) => normalizeMedia(item, "movie"));
+};
+
+export const getSeriesByGenre = async (genreId) => {
+  const data = await request("/discover/tv", {
+    language: "en-US",
+    sort_by: "popularity.desc",
+    with_genres: genreId,
+    page: 1,
+    include_adult: false
+  });
+  return (data.results || []).map((item) => normalizeMedia(item, "tv"));
 };
 
 export const searchMedia = async (query) => {

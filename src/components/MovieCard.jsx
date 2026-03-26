@@ -47,18 +47,16 @@ const MovieCard = ({ item, onClick, compact = false }) => {
       onClick={() => onClick?.(item)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f1118] text-left transition duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:border-red-500/50 ${
-        compact ? "w-[220px] snap-start" : "w-[260px] snap-start"
-      }`}
+      className={`group relative w-full overflow-hidden rounded-lg bg-app-card text-left shadow-md transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg`}
     >
-      <div className="relative">
+      <div className="relative aspect-[2/3]">
         {hovered && iframeSrc ? (
           <iframe
             key={iframeSrc}
             src={iframeSrc}
             title={`${item.title} trailer`}
             allow="autoplay; encrypted-media"
-            className="pointer-events-none h-[300px] w-full border-0"
+            className="pointer-events-none h-full w-full border-0"
           />
         ) : (
           <>
@@ -67,35 +65,31 @@ const MovieCard = ({ item, onClick, compact = false }) => {
                 src={item.posterUrl}
                 alt={item.title}
                 loading="lazy"
-                className="h-[300px] w-full object-cover transition duration-500 group-hover:scale-110"
+                className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
               />
             ) : (
-              <div className="flex h-[300px] w-full items-center justify-center bg-app-soft text-sm text-app-muted">
+              <div className="flex h-full w-full items-center justify-center bg-app-soft text-sm text-app-muted">
                 No poster
               </div>
             )}
           </>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
-        <span className="absolute bottom-2 right-2 rounded-full bg-black/70 px-2 py-1 text-[10px] text-zinc-200 opacity-0 transition group-hover:opacity-100">
-          {hovered && iframeSrc ? "Playing" : "Play"}
-        </span>
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-      <div className="space-y-1 p-3">
-        <h3 className="line-clamp-1 text-base font-semibold text-white">{item.title}</h3>
-        <p className="line-clamp-1 text-xs text-zinc-400">
-          {item.overview || "Movie details unavailable"}
-        </p>
-        <p className="text-xs text-zinc-300">⭐ {item.rating}</p>
-      </div>
-
-      {!item.posterUrl && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/20 text-xs text-zinc-300">
-          Preview unavailable
+        <div className="absolute top-2 left-2">
+          <span className="rounded-full bg-black/60 px-2 py-1 text-xs font-semibold text-white">
+            MOVIE
+          </span>
         </div>
-      )}
+
+        <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs font-bold text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+          <span>{item.rating}</span>
+        </div>
+      </div>
     </button>
   );
 };

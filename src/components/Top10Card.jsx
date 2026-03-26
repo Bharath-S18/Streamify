@@ -5,7 +5,7 @@ const Top10Card = ({ index, movie, onClick }) => {
       onClick={() => onClick?.(movie)}
       className="group relative flex-shrink-0"
     >
-      <div className="relative flex items-end transition duration-300 cursor-pointer">
+      <div className="relative gap-8 flex items-end transition duration-300 cursor-pointer">
         {/* Ranking Number */}
         <div className="z-10">
           <span className="top10-rank text-8xl md:text-9xl font-black text-zinc-700 group-hover:text-red-600 transition duration-300 leading-none">
