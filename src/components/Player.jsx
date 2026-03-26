@@ -1,23 +1,138 @@
+import { useEffect, useMemo, useState } from "react";
 import { config } from "../services/api";
 
-const Player = ({ type, id, title }) => {
-  const iframeSrc = `${config.VIKING_BASE_URL}/embed/${type}/${id}`;
+const Player = ({
+  type,
+  id,
+  title,
+  season = 1,
+  episode = 1,
+}) => {
+  const [loaded, setLoaded] = useState(false);
+  const [timedOut, setTimedOut] = useState(false);
+  const [retrySeed, setRetrySeed] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  // 🔥 Load saved progress
+  useEffect(() => {
+    const saved = localStorage.getItem(`progress-${id}`);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setProgress(parsed.currentTime || 0);
+      } catch {}
+    }
+  }, [id]);
+
+  const safeProgress = Math.max(0, Math.min(86400, Math.floor(progress)));
+
+  // 🎬 Build Vidking URL
+  const iframeSrc = useMemo(() => {
+    let base =
+      type === "tv"
+        ? `${config.PLAYER_BASE_URL}/tv/${id}/${season}/${episode}?color=e50914&autoPlay=true&nextEpisode=true&episodeSelector=true`
+        : `${config.PLAYER_BASE_URL}/movie/${id}?color=e50914&autoPlay=true`;
+
+    if (safeProgress > 0) {
+      base += `&progress=${safeProgress}`;
+    }
+
+    return base;
+  }, [type, id, season, episode, safeProgress]);
+
+  // ⏱️ Timeout logic
+  useEffect(() => {
+    setLoaded(false);
+    setTimedOut(false);
+
+    const timeout = setTimeout(() => {
+      setTimedOut(true);
+    }, 9000);
+
+    return () => clearTimeout(timeout);
+  }, [iframeSrc, retrySeed]);
+
+  // 🔥 Listen to Vidking progress events
+  useEffect(() => {
+    const handleMessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+
+        if (data?.type === "PLAYER_EVENT") {
+          const info = data.data;
+
+          // Save progress
+          localStorage.setItem(
+            `progress-${info.id}`,
+            JSON.stringify(info)
+          );
+        }
+      } catch {}
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+
+  const handleRetry = () => {
+    setRetrySeed((v) => v + 1);
+  };
 
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-4 md:px-8">
       <div className="mb-3 flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-white md:text-2xl">{title || "Now Playing"}</h1>
+        <h1 className="text-lg font-semibold text-white md:text-2xl">
+          {title || "Now Playing"}
+        </h1>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl shadow-black/40">
-        {/* IMPORTANT: Viking API player iframe only */}
+      {/* 🎥 Player Container */}
+      <div className="relative overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl shadow-black/40">
+
+        {/* 🔄 Loading Overlay */}
+        {!loaded && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
+            <div className="text-white animate-pulse">
+              Loading Player...
+            </div>
+          </div>
+        )}
+
+        {/* IMPORTANT: Vidking API player iframe only */}
         <iframe
+          key={`${iframeSrc}-${retrySeed}`}
           src={iframeSrc}
-          title={title || "Viking Player"}
+          title={title || "Vidking Player"}
+          onLoad={() => setLoaded(true)}
+          referrerPolicy="no-referrer"
+          allow="autoplay; encrypted-media; picture-in-picture"
           allowFullScreen
-          className="player-frame aspect-video w-full"
+          className="aspect-video w-full"
         />
       </div>
+
+      {/* ⚠️ Timeout UI */}
+      {timedOut && !loaded && (
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-lg border border-amber-400/40 bg-amber-500/10 p-3 text-xs text-amber-200">
+          <span>Player taking too long to load.</span>
+
+          <button
+            onClick={handleRetry}
+            className="rounded border border-amber-300/50 bg-amber-300/10 px-2.5 py-1 hover:bg-amber-300/20"
+          >
+            Retry
+          </button>
+
+          <a
+            href={iframeSrc}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded border border-white/30 bg-white/10 px-2.5 py-1 hover:bg-white/20"
+          >
+            Open Directly
+          </a>
+        </div>
+      )}
     </section>
   );
 };

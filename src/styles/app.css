@@ -7,6 +7,22 @@
   scrollbar-width: none;
 }
 
+.fade-in {
+  animation: fadeIn 240ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .player-frame {
   border: none;
   min-height: 360px;
@@ -42,4 +58,53 @@
 .row-fade::after {
   right: -1px;
   background: linear-gradient(270deg, rgba(11, 18, 32, 1), rgba(11, 18, 32, 0));
+}
+
+.section-heading {
+  position: relative;
+  padding-left: 16px;
+}
+
+.section-heading::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12%;
+  width: 4px;
+  height: 76%;
+  border-radius: 999px;
+  background: #ef4444;
+}
+
+.top10-title {
+  margin: 0;
+  font-size: clamp(3.2rem, 9vw, 8rem);
+  line-height: 0.9;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(239, 68, 68, 0.9);
+  text-stroke: 2px rgba(239, 68, 68, 0.9);
+}
+
+.top10-card {
+  position: relative;
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.top10-rank {
+  position: absolute;
+  left: -20px;
+  bottom: -18px;
+  z-index: 0;
+  font-size: 8rem;
+  line-height: 1;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(239, 68, 68, 0.7);
+  text-stroke: 2px rgba(239, 68, 68, 0.7);
 }

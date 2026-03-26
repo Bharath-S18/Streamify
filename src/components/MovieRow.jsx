@@ -7,9 +7,9 @@ const MovieRow = ({ title, items, onCardClick }) => {
 
   return (
     <section className="space-y-3">
-      <h2 className="text-lg font-semibold tracking-wide text-zinc-100 md:text-xl">{title}</h2>
+      <h2 className="section-heading text-4xl font-semibold tracking-tight text-zinc-100 md:text-5xl">{title}</h2>
       <div className="row-fade relative">
-        <div className="no-scrollbar flex gap-4 overflow-x-auto pb-2">
+        <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2">
           {items.map((item) => (
             <MovieCard key={`${item.type}-${item.id}`} item={item} onClick={onCardClick} />
           ))}

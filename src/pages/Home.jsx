@@ -4,34 +4,25 @@ import Modal from "../components/Modal";
 import MovieRow from "../components/MovieRow";
 import {
   getMovieGenres,
+  getMoviesByGenre,
   getPopularMovies,
   getTopRatedMovies,
-  getTrending,
-  getTrendingTv
+  getTrending
 } from "../services/api";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const LIST_KEY = "streamify-my-list-v1";
-
-const readMyList = () => {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(LIST_KEY));
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-};
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState({
     trending: [],
     popular: [],
-    topRated: [],
-    tvTrending: []
+    topRated: []
   });
-  const [genres, setGenres] = useState([]);
+  const [genreRows, setGenreRows] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [myList, setMyList] = useState(readMyList);
+  const [myList, setMyList] = useLocalStorage(LIST_KEY, []);
 
   useEffect(() => {
     let mounted = true;
@@ -40,14 +31,21 @@ const Home = () => {
       setLoading(true);
 
       try {
-        // TMDB API requests for core home rows
-        const [trending, popular, topRated, tvTrending, movieGenres] = await Promise.all([
-          getTrending("movie"),
+        const [trending, popular, topRated, genres] = await Promise.all([
+          getTrending(),
           getPopularMovies(),
           getTopRatedMovies(),
-          getTrendingTv(),
           getMovieGenres()
         ]);
+
+        const topGenres = genres.slice(0, 3);
+        const byGenre = await Promise.all(
+          topGenres.map(async (genre) => ({
+            id: genre.id,
+            name: genre.name,
+            items: (await getMoviesByGenre(genre.id)).slice(0, 16)
+          }))
+        );
 
         if (!mounted) {
           return;
@@ -56,14 +54,13 @@ const Home = () => {
         setRows({
           trending: trending.slice(0, 20),
           popular: popular.slice(0, 20),
-          topRated: topRated.slice(0, 20),
-          tvTrending: tvTrending.slice(0, 20)
+          topRated: topRated.slice(0, 20)
         });
-        setGenres(movieGenres);
+        setGenreRows(byGenre);
       } catch {
         if (mounted) {
-          setRows({ trending: [], popular: [], topRated: [], tvTrending: [] });
-          setGenres([]);
+          setRows({ trending: [], popular: [], topRated: [] });
+          setGenreRows([]);
         }
       } finally {
         if (mounted) {
@@ -94,18 +91,39 @@ const Home = () => {
     setMyList((prev) => {
       const key = `${movie.type}-${movie.id}`;
       const exists = prev.some((item) => `${item.type}-${item.id}` === key);
-      const next = exists ? prev.filter((item) => `${item.type}-${item.id}` !== key) : [movie, ...prev];
-      localStorage.setItem(LIST_KEY, JSON.stringify(next));
-      return next;
+      return exists ? prev.filter((item) => `${item.type}-${item.id}` !== key) : [movie, ...prev];
     });
   };
 
   return (
-    <main className="mx-auto w-full max-w-[1400px] space-y-7 px-4 py-5 md:px-8 md:py-7">
-      <HeroBanner movie={featuredMovie} />
+    <main className="space-y-10 pb-10">
+      <HeroBanner movie={featuredMovie} onOpen={setSelectedMovie} />
+
+      {!loading && rows.trending.length > 0 && (
+        <section className="relative mx-auto w-full max-w-[1600px] px-4 md:px-10">
+          <div className="mb-4 flex items-end gap-4">
+            <h2 className="top10-title">TOP 10</h2>
+            <p className="pb-3 text-xl font-semibold tracking-[0.4em] text-zinc-100">CONTENT TODAY</p>
+          </div>
+
+          <div className="no-scrollbar flex gap-6 overflow-x-auto pb-4">
+            {rows.trending.slice(0, 10).map((movie, index) => (
+              <button
+                key={`top10-${movie.id}`}
+                type="button"
+                onClick={() => setSelectedMovie(movie)}
+                className="top10-card group"
+              >
+                <span className="top10-rank">{index + 1}</span>
+                <img src={movie.posterUrl} alt={movie.title} loading="lazy" className="relative z-10 h-[340px] w-[230px] rounded-2xl object-cover shadow-2xl transition duration-300 group-hover:-translate-y-1" />
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
 
       {loading ? (
-        <div className="space-y-6">
+        <div className="mx-auto w-full max-w-[1600px] space-y-6 px-4 md:px-10">
           {Array.from({ length: 4 }).map((_, index) => (
             <div key={index} className="space-y-2">
               <div className="h-6 w-48 animate-pulse rounded bg-app-card" />
@@ -118,27 +136,17 @@ const Home = () => {
           ))}
         </div>
       ) : (
-        <>
+        <div className="mx-auto w-full max-w-[1600px] space-y-10 px-4 md:px-10">
           <MovieRow title="Trending Now" items={rows.trending} onCardClick={setSelectedMovie} />
           <MovieRow title="Popular on Streamify" items={rows.popular} onCardClick={setSelectedMovie} />
           <MovieRow title="Top Rated" items={rows.topRated} onCardClick={setSelectedMovie} />
-          <MovieRow title="Trending TV" items={rows.tvTrending} onCardClick={setSelectedMovie} />
+
+          {genreRows.map((genre) => (
+            <MovieRow key={genre.id} title={genre.name} items={genre.items} onCardClick={setSelectedMovie} />
+          ))}
 
           {myList.length > 0 && <MovieRow title="My List" items={myList} onCardClick={setSelectedMovie} />}
-
-          {genres.length > 0 && (
-            <section className="space-y-2">
-              <h2 className="text-lg font-semibold text-white">Genres</h2>
-              <div className="flex flex-wrap gap-2">
-                {genres.map((genre) => (
-                  <span key={genre.id} className="rounded-full border border-white/10 px-3 py-1 text-xs text-zinc-300">
-                    {genre.name}
-                  </span>
-                ))}
-              </div>
-            </section>
-          )}
-        </>
+        </div>
       )}
 
       <Modal
@@ -146,6 +154,7 @@ const Home = () => {
         onClose={() => setSelectedMovie(null)}
         onToggleList={toggleMyList}
         isInList={selectedMovie ? myListIds.has(`${selectedMovie.type}-${selectedMovie.id}`) : false}
+        onOpenMovie={setSelectedMovie}
       />
     </main>
   );

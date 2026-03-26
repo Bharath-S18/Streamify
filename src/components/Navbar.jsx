@@ -2,8 +2,8 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const linkClass = ({ isActive }) =>
-  `rounded-md px-3 py-1.5 text-sm transition ${
-    isActive ? "bg-white/10 text-white" : "text-zinc-400 hover:text-white"
+  `rounded-md px-2 py-1.5 text-sm transition ${
+    isActive ? "text-white" : "text-zinc-300 hover:text-white"
   }`;
 
 const Navbar = () => {
@@ -21,51 +21,46 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/5 bg-[#0b1220]/90 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-[1400px] flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-8">
-        <div className="flex items-center gap-3">
-          <div className="grid h-7 w-7 place-items-center rounded bg-app-accent text-[10px] font-black">S</div>
-          <button onClick={() => navigate("/")} className="text-sm font-semibold tracking-wide md:text-base">
-            Streamify
-          </button>
-        </div>
+    <header className="sticky top-0 z-50 bg-black/25 backdrop-blur-md">
+      <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-3 px-4 py-4 md:px-10">
+        <button onClick={() => navigate("/")} className="flex items-center gap-2">
+          <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-red-600 to-red-500 text-sm font-black text-white shadow-lg shadow-red-600/30">
+            ▶
+          </div>
+          <span className="text-3xl font-semibold tracking-tight text-white">Streamify</span>
+        </button>
 
-        <nav className="flex items-center gap-1">
+        <nav className="hidden items-center gap-4 md:flex">
           <NavLink to="/" className={linkClass} end>
-            Movies
+            Home
           </NavLink>
           <button
             type="button"
-            className="rounded-md px-3 py-1.5 text-sm text-zinc-400 transition hover:text-white"
-            onClick={() => navigate("/search?q=tv")}
+            className="rounded-md px-2 py-1.5 text-sm text-zinc-300 transition hover:text-white"
+            onClick={() => navigate("/search")}
           >
-            TV Shows
-          </button>
-          <button
-            type="button"
-            className="rounded-md px-3 py-1.5 text-sm text-zinc-400 transition hover:text-white"
-            onClick={() => navigate("/search?q=people")}
-          >
-            People
+            Browse
           </button>
         </nav>
 
-        <form
-          onSubmit={onSearch}
-          className="order-last flex w-full max-w-2xl items-center gap-2 rounded-md border border-white/10 bg-[#101929] px-3 py-2 md:order-none"
-        >
+        <form onSubmit={onSearch} className="hidden items-center gap-2 rounded-full border border-white/20 bg-black/30 px-3 py-1.5 md:flex">
           <input
             value={term}
             onChange={(e) => setTerm(e.target.value)}
-            placeholder="Search for a movie, tv show, person"
-            className="w-full bg-transparent text-sm text-white outline-none placeholder:text-zinc-500"
+            placeholder="Search"
+            className="w-48 bg-transparent text-sm text-white outline-none placeholder:text-zinc-400"
           />
-          <button className="text-xs font-medium text-zinc-300 transition hover:text-white" type="submit">
-            Search
+          <button className="text-zinc-100" type="submit">
+            ⌕
           </button>
         </form>
 
-        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-zinc-200 to-zinc-500" title="Profile" />
+        <div className="flex items-center gap-3">
+          <button type="button" onClick={() => navigate("/search")} className="rounded-full border border-white/20 bg-black/30 p-2 text-white md:hidden">
+            ⌕
+          </button>
+          <button type="button" className="rounded-full border border-white/20 bg-black/30 p-2 text-white">👤</button>
+        </div>
       </div>
     </header>
   );
