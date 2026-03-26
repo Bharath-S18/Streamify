@@ -1,6 +1,7 @@
 const SectionHeader = () => {
   return (
     <div className="flex items-center gap-3 mb-6 ml-4 mt-4">
+      <div className="w-1 h-16 bg-red-600"></div>
       <h3 className="top10-title font-bold text-6xl sm:text-7xl lg:text-8xl flex">
         <span className="relative z-10 letter-shadow-r">T</span>
         <span className="relative -ml-4 z-20 letter-shadow-r">O</span>
