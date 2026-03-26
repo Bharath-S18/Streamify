@@ -11,20 +11,8 @@ const Player = ({
   const [loaded, setLoaded] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
   const [retrySeed, setRetrySeed] = useState(0);
-  const [progress, setProgress] = useState(0);
 
-  // 🔥 Load saved progress
-  useEffect(() => {
-    const saved = localStorage.getItem(`progress-${id}`);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setProgress(parsed.currentTime || 0);
-      } catch {}
-    }
-  }, [id]);
-
-  const safeProgress = Math.max(0, Math.min(86400, Math.floor(progress)));
+  const safeProgress = 0;
 
   // 🎬 Build Vidking URL
   const iframeSrc = useMemo(() => {
@@ -51,28 +39,6 @@ const Player = ({
 
     return () => clearTimeout(timeout);
   }, [iframeSrc, retrySeed]);
-
-  // 🔥 Listen to Vidking progress events
-  useEffect(() => {
-    const handleMessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-
-        if (data?.type === "PLAYER_EVENT") {
-          const info = data.data;
-
-          // Save progress
-          localStorage.setItem(
-            `progress-${info.id}`,
-            JSON.stringify(info)
-          );
-        }
-      } catch {}
-    };
-
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, []);
 
   const handleRetry = () => {
     setRetrySeed((v) => v + 1);

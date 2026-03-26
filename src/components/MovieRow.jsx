@@ -35,7 +35,12 @@ const MovieRow = ({ title, items, onCardClick, category, genreId }) => {
         if (category === "trending") newItems = await getTrendingSeries();
         else if (category === "popular") newItems = await getPopularSeries();
         else if (category === "topRated") newItems = await getTopRatedSeries();
-        else if (genreId) newItems = await getSeriesByGenre(genreId);
+        else if (genreId) {
+          newItems = await getSeriesByGenre(genreId);
+          if (newItems.length === 0) {
+            newItems = await getPopularSeries();
+          }
+        }
       }
       // Filter out items that don't have a poster path
       const validItems = newItems.filter(item => item.posterPath);
