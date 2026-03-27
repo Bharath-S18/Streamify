@@ -1,116 +1,88 @@
-# Streamify
+# Streamify (Web)
 
-Streamify is a modern movie and TV discovery web app built with React + Vite. It uses TMDB data to let users browse trending content, search titles, and watch trailers in a clean streaming-style UI.
+Streamify is a movie and TV discovery web app built with **React + Vite**. It lets users explore movies/series, view details, and watch content through an embedded player experience.
 
-## ✨ Features
+This product uses the **TMDB API** for listing content but is **not endorsed or certified by TMDB**.
 
-- Hero banner with featured content
-- Movie/show rows by category
-- Reusable cards and modal previews
-- Search experience with debounced input
-- Watch page with an embedded player (always starts from the beginning).
-- "My List" feature to save favorite movies and shows.
-- Dynamic content rows that fall back to popular content if a specific category is empty.
-- Responsive layout for desktop and mobile.
+## Tech Stack
 
-## 🧱 Tech Stack
+Built with:
 
 - React (Vite)
 - React Router
-- Tailwind CSS + PostCSS
+- Tailwind CSS / PostCSS
 - TMDB API
 
-## 📁 Project Structure
+## Preview
 
-```text
-/
-├── public/
-│   ├── index.html
-│   └── ...
-├── src/
-│   ├── components/
-│   │   ├── HeroBanner.jsx
-│   │   ├── Modal.jsx
-│   │   ├── MovieCard.jsx
-│   │   ├── MovieRow.jsx
-│   │   └── Navbar.jsx
-│   ├── hooks/
-│   │   ├── useDebounce.js
-│   │   └── useLocalStorage.js
-│   ├── pages/
-│   │   ├── Home.jsx
-│   │   ├── Search.jsx
-│   │   └── Watch.jsx
-│   ├── services/
-│   │   ├── api.js
-│   │   └── tmdb.js
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
-├── package.json
-├── vite.config.js
-└── tailwind.config.js
-```
+Add screenshots/gifs here:
 
-## 🚀 Getting Started
+- Home Screen
+- Search Screen
+- Watch Screen
 
-### 1) Clone
+## App not starting issue
 
-Clone this repository to your machine.
+If data doesn’t load, your ISP/network may be blocking TMDB API requests.
 
-### 2) Install dependencies
+Use a VPN or another network and try again.
 
-Install packages with npm.
+## Features
 
-### 3) Configure environment variables
+- Explore trending/popular/top-rated movies and TV series
+- Search for specific movies and TV series
+- View details including rating, overview, cast, and crew
+- Watch trailers/details and play content in-app flow
+- My List support using local storage
+- Genre rows with fallback behavior when no series are found
 
-Create a `.env` file at the project root (if not already present):
+## Technologies Used
+
+- React
+- Vite
+- Tailwind CSS
+- TMDB API
+- Third-party embedded streaming/player service
+
+## Run in development locally
+
+### Clone project
+
+`https://github.com/Bharath-S18/Streamify.git`
+
+### Change directory
+
+`cd Streamify`
+
+### Install dependencies
+
+`npm install`
+
+### Create `.env` file and add your TMDB API key
 
 ```env
-VITE_TMDB_API_KEY=your_tmdb_api_key_here
+VITE_TMDB_API_KEY=
 ```
 
-> Vite exposes only variables prefixed with `VITE_` to client code.
+### Start development server
 
-### 4) Run in development
+`npm run dev`
 
-Start the Vite dev server and open the local URL shown in terminal.
+### Build for production
 
-## 📦 Build for Production
+`npm run build`
 
-Generate an optimized production build. Output goes to the `build/` folder in this project.
+## Bug Report or Feature Request
 
-## 🧪 Lint / Quality
+If you encounter a bug, or have a request for a new feature, please open a **new issue**.
 
-Run linting to catch common code issues before pushing changes.
+## Disclaimer
 
-## 🖼️ Screenshots
+This app was created for learning and project purposes with no intent to commercialize.
 
-Add screenshots here after hosting assets, for example:
+Streamify is only an interface that provides links/embeds to third-party websites hosting movies and TV shows. This app does not host, store, or distribute any media content. All media is provided by publicly available third-party services.
 
-- Home page
-- Search page
-- Watch page
+We do not claim ownership, affiliation, or endorsement of the content available through these external links. All trademarks, copyrights, and media belong to their respective owners.
 
-## 🌍 Deployment
-
-This app can be deployed to any static hosting platform (for example Vercel, Netlify, GitHub Pages, or Azure Static Web Apps).
-
-Typical flow:
-
-1. Build the app
-2. Deploy the build output directory
-3. Add `VITE_TMDB_API_KEY` in host environment variables
-
-## 🛣️ Roadmap Ideas
-
-- Authentication and user profiles
-- Watchlist / favorites sync
-- Genre and language filters
-- Infinite scroll / pagination
-- Better accessibility and keyboard navigation
-
-## 🤝 Contributing
-
-Contributions are welcome! Open an issue for ideas/bugs or submit a pull request.
+If you are a content owner and believe copyrighted material is linked improperly, please contact the respective third-party provider to request content removal. We do not control external content.
 
