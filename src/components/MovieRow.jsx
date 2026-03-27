@@ -56,17 +56,17 @@ const MovieRow = ({ title, items, onCardClick, category, genreId }) => {
 
   return (
     <section className="space-y-3">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <div className="w-1 h-7 bg-red-600"></div>
-          <h2 className="section-heading text-2xl font-semibold tracking-tight text-zinc-100 md:text-3xl">
+          <h2 className="section-heading text-xl font-semibold tracking-tight text-zinc-100 sm:text-2xl md:text-3xl">
             {title}
           </h2>
         </div>
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-1 text-xs sm:gap-2 sm:text-sm">
           <button
             onClick={() => handleTabClick("Movies")}
-            className={`px-3 py-1 relative ${
+            className={`px-2.5 py-1 sm:px-3 relative ${
               activeTab === "Movies" ? "text-white" : "text-zinc-400"
             }`}
           >
@@ -77,7 +77,7 @@ const MovieRow = ({ title, items, onCardClick, category, genreId }) => {
           </button>
           <button
             onClick={() => handleTabClick("Series")}
-            className={`px-3 py-1 relative ${
+            className={`px-2.5 py-1 sm:px-3 relative ${
               activeTab === "Series" ? "text-white" : "text-zinc-400"
             }`}
           >
@@ -95,7 +95,7 @@ const MovieRow = ({ title, items, onCardClick, category, genreId }) => {
             const container = e.currentTarget.nextElementSibling;
             container?.scrollBy({ left: -window.innerWidth * 0.8, behavior: "smooth" });
           }}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-black/60 hover:bg-red-600 text-white p-3 rounded-full transition duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 hidden md:block bg-black/60 hover:bg-red-600 text-white p-3 rounded-full transition duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100"
           style={{ transform: "translate(-50%, -50%)" }}
           aria-label="Scroll left"
         >
@@ -129,7 +129,7 @@ const MovieRow = ({ title, items, onCardClick, category, genreId }) => {
             const container = e.currentTarget.previousElementSibling;
             container?.scrollBy({ left: window.innerWidth * 0.8, behavior: "smooth" });
           }}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-black/60 hover:bg-red-600 text-white p-3 rounded-full transition duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 hidden md:block bg-black/60 hover:bg-red-600 text-white p-3 rounded-full transition duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100"
           style={{ transform: "translate(50%, -50%)" }}
           aria-label="Scroll right"
         >

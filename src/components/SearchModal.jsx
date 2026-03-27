@@ -81,7 +81,7 @@ const SearchModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 sm:pt-20 landscape:pt-8">
       {/* Backdrop with blur */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-md"
@@ -89,15 +89,15 @@ const SearchModal = ({ isOpen, onClose }) => {
       />
 
       {/* Modal Container */}
-      <div className="relative z-10 w-full max-w-2xl mx-4 animate-fade-in">
+      <div className="relative z-10 w-full max-w-2xl mx-1.5 sm:mx-4 animate-fade-in">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4 px-6 py-4 bg-black/40 rounded-t-2xl backdrop-blur">
-          <h2 className="text-2xl font-bold text-white">Search</h2>
-          <div className="flex items-center gap-4">
+        <div className="mb-3 sm:mb-4 flex items-center justify-between px-3 py-3 sm:px-6 sm:py-4 bg-black/40 rounded-t-2xl backdrop-blur">
+          <h2 className="text-lg sm:text-2xl font-bold text-white">Search</h2>
+          <div className="flex items-center gap-2 sm:gap-4">
             <select
               value={mediaType}
               onChange={(e) => setMediaType(e.target.value)}
-              className="bg-zinc-800/70 text-white text-sm font-medium px-3 py-2 rounded-lg outline-none hover:bg-zinc-700 transition"
+              className="bg-zinc-800/70 text-white text-xs sm:text-sm font-medium px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg outline-none hover:bg-zinc-700 transition"
             >
               <option value="all">All</option>
               <option value="movie">Movies</option>
@@ -105,7 +105,7 @@ const SearchModal = ({ isOpen, onClose }) => {
             </select>
             <button
               onClick={onClose}
-              className="text-white text-2xl hover:opacity-70 transition"
+              className="text-white text-xl sm:text-2xl hover:opacity-70 transition"
               aria-label="Close search"
             >
               ✕
@@ -114,7 +114,7 @@ const SearchModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Search Input */}
-        <div className="px-6 py-4 bg-black/40 backdrop-blur">
+        <div className="px-3 py-3 sm:px-6 sm:py-4 bg-black/40 backdrop-blur">
           <div className="relative">
             <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400">
               🔍
@@ -124,7 +124,7 @@ const SearchModal = ({ isOpen, onClose }) => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search movies or TV shows..."
-              className="w-full bg-zinc-800/70 text-white placeholder:text-zinc-500 rounded-xl pl-10 pr-10 py-3 text-base outline-none focus:bg-zinc-700 transition"
+              className="w-full bg-zinc-800/70 text-white placeholder:text-zinc-500 rounded-xl pl-10 pr-10 py-2.5 sm:py-3 text-sm sm:text-base outline-none focus:bg-zinc-700 transition"
             />
             {query && (
               <button
@@ -138,7 +138,7 @@ const SearchModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Results */}
-        <div className="bg-black/40 backdrop-blur rounded-b-2xl px-6 py-4 max-h-96 overflow-y-auto no-scrollbar">
+        <div className="bg-black/40 backdrop-blur rounded-b-2xl px-3 py-3 sm:px-6 sm:py-4 max-h-[72vh] sm:max-h-96 landscape:max-h-[78vh] overflow-y-auto no-scrollbar">
           {loading ? (
             <div className="space-y-3">
               {Array.from({ length: 4 }).map((_, idx) => (
@@ -161,10 +161,10 @@ const SearchModal = ({ isOpen, onClose }) => {
                     );
                     onClose();
                   }}
-                  className="w-full flex gap-4 p-3 rounded-lg bg-zinc-800/40 hover:bg-zinc-700/60 transition group cursor-pointer"
+                  className="w-full flex gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-lg bg-zinc-800/40 hover:bg-zinc-700/60 transition group cursor-pointer"
                 >
                   {/* Poster */}
-                  <div className="w-16 h-24 flex-shrink-0">
+                  <div className="w-14 h-20 sm:w-16 sm:h-24 flex-shrink-0">
                     <img
                       src={item.posterUrl}
                       alt={item.title}
@@ -178,7 +178,7 @@ const SearchModal = ({ isOpen, onClose }) => {
 
                   {/* Info */}
                   <div className="flex-1 text-left py-1">
-                    <h3 className="font-bold text-white group-hover:text-red-500 transition line-clamp-2">
+                    <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-red-500 transition line-clamp-2">
                       {item.title}
                     </h3>
                     <div className="text-xs text-zinc-400 mt-2 space-y-1">

@@ -66,8 +66,8 @@ const Search = () => {
   const myListIds = new Set(myList.map((item) => `${item.type}-${item.id}`));
 
   return (
-    <main className="mx-auto w-full max-w-[1400px] space-y-5 px-4 py-5 md:px-8 md:py-7 pt-20">
-      <h1 className="text-2xl font-bold text-white md:text-3xl">Search Results</h1>
+    <main className="mx-auto w-full max-w-[1400px] space-y-4 sm:space-y-5 px-3 sm:px-4 py-5 md:px-8 md:py-7 pt-20">
+      <h1 className="text-xl sm:text-2xl font-bold text-white md:text-3xl">Search Results</h1>
       <div className="rounded-lg border border-white/10 bg-app-card p-3">
         <input
           value={query}
@@ -82,13 +82,13 @@ const Search = () => {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
           {Array.from({ length: 12 }).map((_, idx) => (
             <div key={idx} className="h-[290px] animate-pulse rounded-xl bg-app-card" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
           {results.map((item) => (
             <MovieCard key={`${item.type}-${item.id}`} item={item} compact onClick={setSelected} />
           ))}

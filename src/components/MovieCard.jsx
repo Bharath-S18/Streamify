@@ -1,14 +1,20 @@
 import React from "react";
 
-const MovieCard = ({ item, onClick }) => {
+const MovieCard = ({ item, onClick, compact = false }) => {
   const poster = `https://image.tmdb.org/t/p/w300${item.posterPath}`;
+  const wrapperClass = compact
+    ? "w-full"
+    : "flex-shrink-0 w-32 h-48 px-1.5 sm:w-40 sm:h-60 sm:px-2 md:w-44 md:h-64";
+  const cardClass = compact
+    ? "relative w-full aspect-[2/3] rounded-lg overflow-hidden cursor-pointer"
+    : "relative w-full h-full rounded-lg overflow-hidden cursor-pointer";
 
   return (
     <div
-      className="flex-shrink-0 w-44 h-64 px-2" // Use padding for spacing within the row
+      className={wrapperClass}
       onClick={() => onClick(item)}
     >
-      <div className="relative w-full h-full rounded-lg overflow-hidden cursor-pointer">
+      <div className={cardClass}>
         <img
           src={poster}
           alt={item.title || item.name}

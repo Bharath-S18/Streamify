@@ -4,7 +4,7 @@ import React from "react";
 const CastRow = ({ cast }) => {
   return (
     <section className="space-y-4">
-      <h3 className="section-heading text-4xl font-semibold tracking-tight text-white">Actors</h3>
+      <h3 className="section-heading text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-white">Actors</h3>
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {cast.map((actor) => (
           <article
@@ -23,7 +23,7 @@ const CastRow = ({ cast }) => {
             )}
 
             <div className="min-w-0 space-y-0.5">
-              <p className="truncate text-xl font-semibold text-zinc-100">{actor.name}</p>
+              <p className="truncate text-base sm:text-lg md:text-xl font-semibold text-zinc-100">{actor.name}</p>
               <p className="truncate text-sm text-zinc-400">{actor.character || "Unknown role"}</p>
             </div>
           </article>

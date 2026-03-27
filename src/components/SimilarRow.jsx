@@ -9,7 +9,7 @@ const SimilarRow = ({ items, onCardClick }) => {
 
   return (
     <section className="space-y-4">
-      <h3 className="section-heading text-4xl font-semibold tracking-tight text-white">You may like</h3>
+      <h3 className="section-heading text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-white">You may like</h3>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {items.map((item) => (
           <button

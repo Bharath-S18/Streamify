@@ -5,16 +5,16 @@ const Top10Card = ({ index, movie, onClick }) => {
       onClick={() => onClick?.(movie)}
       className="group relative flex-shrink-0"
     >
-      <div className="relative gap-8 flex items-end transition duration-300 cursor-pointer">
+      <div className="relative flex items-end gap-2.5 sm:gap-8 transition duration-300 cursor-pointer">
         {/* Ranking Number */}
-        <div className="z-10">
-          <span className="top10-rank text-8xl md:text-9xl font-black text-zinc-700 group-hover:text-red-600 transition duration-300 leading-none">
+        <div className="z-10 shrink-0">
+          <span className="top10-rank text-zinc-700 group-hover:text-red-600 transition duration-300 leading-none">
             {index}
           </span>
         </div>
 
         {/* Poster Image */}
-        <div className="relative z-0 -ml-8 w-40 h-56 md:w-48 md:h-64">
+        <div className="relative z-0 -ml-1 sm:-ml-7 md:-ml-8 w-28 h-40 sm:w-40 sm:h-56 md:w-48 md:h-64">
           <div className="relative overflow-hidden rounded-lg shadow-lg">
             <img
               src={movie.posterUrl}
