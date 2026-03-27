@@ -14,6 +14,8 @@ export {
   getTopRatedSeries,
   getSeriesByGenre,
   getTrailerKey,
+  getRecommendations,
+  getTvSeasonEpisodes,
   getVideos,
   imageFromPath,
   searchMedia

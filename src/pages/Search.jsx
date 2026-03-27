@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import MovieCard from "../components/MovieCard";
-import Modal from "../components/Modal";
 import { searchMedia } from "../services/api";
 import useDebounce from "../hooks/useDebounce";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-
-const LIST_KEY = "streamify-my-list-v1";
 
 const Search = () => {
   const [params, setParams] = useSearchParams();
@@ -15,8 +11,6 @@ const Search = () => {
 
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
-  const [selected, setSelected] = useState(null);
-  const [myList, setMyList] = useLocalStorage(LIST_KEY, []);
 
   useEffect(() => {
     setQuery(params.get("q") || "");
@@ -55,16 +49,6 @@ const Search = () => {
     };
   }, [debouncedQuery]);
 
-  const toggleMyList = (movie) => {
-    setMyList((prev) => {
-      const key = `${movie.type}-${movie.id}`;
-      const exists = prev.some((item) => `${item.type}-${item.id}` === key);
-      return exists ? prev.filter((item) => `${item.type}-${item.id}` !== key) : [movie, ...prev];
-    });
-  };
-
-  const myListIds = new Set(myList.map((item) => `${item.type}-${item.id}`));
-
   return (
     <main className="mx-auto w-full max-w-[1400px] space-y-4 sm:space-y-5 px-3 sm:px-4 py-5 md:px-8 md:py-7 pt-20">
       <h1 className="text-xl sm:text-2xl font-bold text-white md:text-3xl">Search Results</h1>
@@ -90,7 +74,7 @@ const Search = () => {
       ) : (
         <div className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
           {results.map((item) => (
-            <MovieCard key={`${item.type}-${item.id}`} item={item} compact onClick={setSelected} />
+            <MovieCard key={`${item.type}-${item.id}`} item={item} compact />
           ))}
         </div>
       )}
@@ -101,13 +85,6 @@ const Search = () => {
         </div>
       )}
 
-      <Modal
-        movie={selected}
-        onClose={() => setSelected(null)}
-        onToggleList={toggleMyList}
-        isInList={selected ? myListIds.has(`${selected.type}-${selected.id}`) : false}
-        onOpenMovie={setSelected}
-      />
     </main>
   );
 };

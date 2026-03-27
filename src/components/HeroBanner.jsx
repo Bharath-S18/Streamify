@@ -4,11 +4,14 @@ import { useNavigate } from "react-router-dom";
 const HeroBanner = ({ movie, onOpen, movies = [] }) => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [fadeOut, setFadeOut] = useState(false);
-  const [displayMovie, setDisplayMovie] = useState(movie);
 
   // Get all available movies for rotation
   const heroMovies = useMemo(() => (movies && movies.length > 0 ? movies.slice(0, 5) : [movie]), [movies, movie]);
+  const displayMovie = useMemo(
+    () => heroMovies[currentIndex] || movie,
+    [heroMovies, currentIndex, movie]
+  );
+
   const heroBackgroundImage = useMemo(() => {
     if (displayMovie?.backdropPath) {
       return `https://image.tmdb.org/t/p/w1280${displayMovie.backdropPath}`;
@@ -24,21 +27,16 @@ const HeroBanner = ({ movie, onOpen, movies = [] }) => {
     if (!heroMovies || heroMovies.length === 0) return;
 
     const interval = setInterval(() => {
-      setFadeOut(true);
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % heroMovies.length);
-        setDisplayMovie(heroMovies[(currentIndex + 1) % heroMovies.length]);
-        setFadeOut(false);
-      }, 500);
+      setCurrentIndex((prev) => (prev + 1) % heroMovies.length);
     }, 6000);
 
     return () => clearInterval(interval);
-  }, [heroMovies, currentIndex]);
+  }, [heroMovies]);
 
-  // Update display movie when movie prop changes
+  // Reset to first card when source list changes
   useEffect(() => {
-    setDisplayMovie(movie);
-  }, [movie]);
+    setCurrentIndex(0);
+  }, [movie?.id, heroMovies.length]);
 
   if (!displayMovie) {
     return (
@@ -65,16 +63,18 @@ const HeroBanner = ({ movie, onOpen, movies = [] }) => {
   }
 
   return (
-    <section 
-      className={`relative w-full min-h-[68vh] md:h-screen overflow-hidden bg-cover bg-center transition-opacity duration-500 landscape:max-h-[100svh] ${
-        fadeOut ? "opacity-70" : "opacity-100"
-      }`}
-      style={{ 
-        backgroundImage: `url(${heroBackgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center"
-      }}
-    >
+    <section className="relative w-full min-h-[68vh] md:h-screen overflow-hidden bg-app-card landscape:max-h-[100svh]">
+      {heroBackgroundImage && (
+        <img
+          src={heroBackgroundImage}
+          alt={displayMovie?.title || "Featured background"}
+          className="absolute inset-0 h-full w-full object-cover"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+        />
+      )}
+
       {/* Gradient Overlay - Left (black) to Right (transparent) */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
       

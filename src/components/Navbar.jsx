@@ -13,8 +13,8 @@ const Navbar = () => {
   const [searchModalOpen, setSearchModalOpen] = useState(false);
 
   // Check if current page needs back button
-  const showBackButton = location.pathname.startsWith("/watch") || 
-                         location.pathname.startsWith("/details");
+  const showBackButton = location.pathname.startsWith("/watch") ||
+    /^\/(movie|tv)\//.test(location.pathname);
 
   return (
     <>

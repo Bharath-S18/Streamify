@@ -1,6 +1,6 @@
-import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import HeroBanner from "../components/HeroBanner";
-import Modal from "../components/Modal";
 import MovieRow from "../components/MovieRow";
 import SectionHeader from "../components/SectionHeader";
 import Top10Card from "../components/Top10Card";
@@ -35,6 +35,7 @@ const readCachedTrending = () => {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
   const [cachedTrending] = useState(() => readCachedTrending());
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState({
@@ -43,7 +44,6 @@ const Home = () => {
     topRated: []
   });
   const [genreRows, setGenreRows] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
   const [myList, setMyList] = useLocalStorage(LIST_KEY, []);
 
   useEffect(() => {
@@ -113,28 +113,16 @@ const Home = () => {
 
   const featuredMovie = useMemo(() => rows.trending[0] || null, [rows.trending]);
 
-  const myListIds = useMemo(() => new Set(myList.map((item) => `${item.type}-${item.id}`)), [myList]);
-
-  const toggleMyList = useCallback((movie) => {
-    setMyList((prev) => {
-      const key = `${movie.type}-${movie.id}`;
-      const exists = prev.some((item) => `${item.type}-${item.id}` === key);
-      return exists ? prev.filter((item) => `${item.type}-${item.id}` !== key) : [movie, ...prev];
-    });
-  }, [setMyList]);
-
   const handleCardClick = useCallback((movie) => {
-    startTransition(() => {
-      setSelectedMovie(movie);
-    });
-  }, []);
+    navigate(`/${movie.type || "movie"}/${movie.id}`);
+  }, [navigate]);
 
   return (
     <main className="space-y-0 pb-10">
       <HeroBanner movie={featuredMovie} movies={rows.trending} onOpen={handleCardClick} />
       <div className="space-y-10">
 
-      <section className="relative mx-auto w-full max-w-[1600px] px-3 sm:px-4 md:px-10 min-h-[380px] sm:min-h-[430px]">
+      <section className="relative mx-auto w-full max-w-[1600px] px-3 sm:px-4 md:px-8 lg:px-10 min-h-[360px] sm:min-h-[400px] md:min-h-[420px]">
         {!loading && rows.trending.length > 0 && (
           <SectionHeader />
         )}
@@ -153,12 +141,12 @@ const Home = () => {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
             </button>
 
-          <div className="scroll-container no-scrollbar flex gap-4 sm:gap-8 overflow-x-auto px-2 sm:px-4 pb-4 min-h-[280px] sm:min-h-[320px]">
+          <div className="scroll-container no-scrollbar flex gap-4 sm:gap-6 md:gap-7 lg:gap-8 overflow-x-auto px-2 sm:px-3 md:px-4 pb-4 min-h-[260px] sm:min-h-[300px] md:min-h-[320px]">
             {loading
               ? Array.from({ length: 6 }).map((_, idx) => (
-                  <div key={`top10-skel-${idx}`} className="flex items-end gap-3 sm:gap-6 flex-shrink-0">
-                    <div className="h-14 w-8 sm:h-24 sm:w-14 md:h-28 md:w-16 rounded bg-app-card animate-pulse" />
-                    <div className="h-40 w-28 sm:h-56 sm:w-40 md:h-64 md:w-48 rounded-lg bg-app-card animate-pulse" />
+                  <div key={`top10-skel-${idx}`} className="flex items-end gap-3 sm:gap-5 md:gap-6 lg:gap-6 flex-shrink-0">
+                    <div className="h-14 w-8 sm:h-20 sm:w-12 md:h-24 md:w-14 lg:h-28 lg:w-16 rounded bg-app-card animate-pulse" />
+                    <div className="h-40 w-28 sm:h-52 sm:w-36 md:h-56 md:w-40 lg:h-64 lg:w-48 rounded-lg bg-app-card animate-pulse" />
                   </div>
                 ))
               : rows.trending.slice(0, 10).map((movie, index) => (
@@ -235,13 +223,6 @@ const Home = () => {
       )}
 
       </div>
-      <Modal
-        movie={selectedMovie}
-        onClose={() => setSelectedMovie(null)}
-        onToggleList={toggleMyList}
-        isInList={selectedMovie ? myListIds.has(`${selectedMovie.type}-${selectedMovie.id}`) : false}
-        onOpenMovie={setSelectedMovie}
-      />
     </main>
   );
 };
