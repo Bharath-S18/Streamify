@@ -10,8 +10,17 @@ const SectionHeader = () => {
         <p className="text-[10px] font-semibold tracking-[0.22em] text-zinc-300">CONTENT TODAY</p>
       </div>
 
+      {/* Tablet compact header */}
+      <div className="hidden sm:flex lg:hidden items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-1 rounded-full bg-red-600" />
+          <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">TOP 10</h3>
+        </div>
+        <p className="text-xs md:text-sm font-semibold tracking-[0.2em] text-zinc-300">CONTENT TODAY</p>
+      </div>
+
       {/* Desktop stylized header */}
-      <div className="hidden sm:ml-4 sm:mt-4 sm:flex sm:items-center sm:gap-3 sm:mb-6">
+      <div className="hidden lg:ml-4 lg:mt-4 lg:flex lg:items-center lg:gap-3 lg:mb-6">
         <div className="h-16 w-1 bg-red-600"></div>
         <h3 className="top10-title flex font-bold text-7xl lg:text-8xl">
           <span className="relative z-10 letter-shadow-r">T</span>
