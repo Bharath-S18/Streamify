@@ -170,7 +170,12 @@ export const getMediaDetails = async (type, id) => {
   return {
     ...normalizeMedia(data, type),
     genres: data.genres || [],
-    runtime: data.runtime || data.episode_run_time?.[0] || 0
+    runtime: data.runtime || data.episode_run_time?.[0] || 0,
+    tagline: data.tagline || "",
+    status: data.status || "",
+    seasons: data.seasons || [],
+    numberOfSeasons: data.number_of_seasons || 0,
+    numberOfEpisodes: data.number_of_episodes || 0
   };
 };
 
@@ -190,6 +195,29 @@ export const getCredits = async (type, id) => {
 export const getSimilar = async (type, id) => {
   const data = await request(`/${type}/${id}/similar`, { language: "en-US", page: 1 });
   return (data.results || []).map((item) => normalizeMedia(item, type));
+};
+
+export const getRecommendations = async (type, id) => {
+  const data = await request(`/${type}/${id}/recommendations`, { language: "en-US", page: 1 });
+  return (data.results || []).map((item) => normalizeMedia(item, type));
+};
+
+export const getTvSeasonEpisodes = async (tvId, seasonNumber) => {
+  const data = await request(`/tv/${tvId}/season/${seasonNumber}`, { language: "en-US" });
+  return {
+    id: data.id,
+    name: data.name,
+    seasonNumber: data.season_number,
+    episodes: (data.episodes || []).map((episode) => ({
+      id: episode.id,
+      episodeNumber: episode.episode_number,
+      name: episode.name || `Episode ${episode.episode_number}`,
+      runtime: episode.runtime || 0,
+      overview: episode.overview || "No description available.",
+      stillPath: episode.still_path || "",
+      airDate: episode.air_date || ""
+    }))
+  };
 };
 
 export const getTrailerKey = (videos = []) => {

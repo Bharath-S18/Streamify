@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { searchMedia } from "../services/api";
 import useDebounce from "../hooks/useDebounce";
@@ -47,6 +47,8 @@ const SearchModal = ({ isOpen, onClose }) => {
 
   // Fetch search results
   useEffect(() => {
+    if (!isOpen) return;
+
     if (!debouncedQuery.trim()) {
       setResults([]);
       return;
@@ -76,7 +78,12 @@ const SearchModal = ({ isOpen, onClose }) => {
     return () => {
       active = false;
     };
-  }, [debouncedQuery]);
+  }, [debouncedQuery, isOpen]);
+
+  const displayedResults = useMemo(() => {
+    if (mediaType === "all") return results;
+    return results.filter((item) => item.type === mediaType);
+  }, [results, mediaType]);
 
   if (!isOpen) return null;
 
@@ -148,17 +155,13 @@ const SearchModal = ({ isOpen, onClose }) => {
                 />
               ))}
             </div>
-          ) : results.length > 0 ? (
+          ) : displayedResults.length > 0 ? (
             <div className="space-y-3">
-              {results.map((item) => (
+              {displayedResults.map((item) => (
                 <button
                   key={`${item.type}-${item.id}`}
                   onClick={() => {
-                    navigate(
-                      `/watch/${item.type}/${item.id}?title=${encodeURIComponent(
-                        item.title
-                      )}`
-                    );
+                    navigate(`/${item.type || "movie"}/${item.id}`);
                     onClose();
                   }}
                   className="w-full flex gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-lg bg-zinc-800/40 hover:bg-zinc-700/60 transition group cursor-pointer"
@@ -168,6 +171,8 @@ const SearchModal = ({ isOpen, onClose }) => {
                     <img
                       src={item.posterUrl}
                       alt={item.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover rounded-lg"
                       onError={(e) => {
                         e.target.src =

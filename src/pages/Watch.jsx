@@ -6,6 +6,8 @@ const Watch = () => {
   const { type, id } = useParams();
   const [searchParams] = useSearchParams();
   const title = searchParams.get("title") || "Now Playing";
+  const season = Number(searchParams.get("season") || 1);
+  const episode = Number(searchParams.get("episode") || 1);
 
   return (
     <div className="pb-8 pt-20">
@@ -14,7 +16,7 @@ const Watch = () => {
           ← Back to browse
         </Link>
       </div>
-      <Player type={type} id={id} title={title} progress={0} />
+      <Player type={type} id={id} title={title} season={season} episode={episode} progress={0} />
     </div>
   );
 };

@@ -104,6 +104,21 @@
   transition: transform 300ms ease-out, filter 300ms ease-out;
 }
 
+.cinematic-zoom {
+  animation: cinematicZoom 24s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+@keyframes cinematicZoom {
+  from {
+    transform: scale(1.03);
+  }
+
+  to {
+    transform: scale(1.09);
+  }
+}
+
 .top10-card:hover img {
   transform: scale(1.05) translateY(-8px);
   filter: brightness(1.1);

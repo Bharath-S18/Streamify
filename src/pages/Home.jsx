@@ -1,6 +1,6 @@
-import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import HeroBanner from "../components/HeroBanner";
-import Modal from "../components/Modal";
 import MovieRow from "../components/MovieRow";
 import SectionHeader from "../components/SectionHeader";
 import Top10Card from "../components/Top10Card";
@@ -35,6 +35,7 @@ const readCachedTrending = () => {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
   const [cachedTrending] = useState(() => readCachedTrending());
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState({
@@ -43,7 +44,6 @@ const Home = () => {
     topRated: []
   });
   const [genreRows, setGenreRows] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
   const [myList, setMyList] = useLocalStorage(LIST_KEY, []);
 
   useEffect(() => {
@@ -113,21 +113,9 @@ const Home = () => {
 
   const featuredMovie = useMemo(() => rows.trending[0] || null, [rows.trending]);
 
-  const myListIds = useMemo(() => new Set(myList.map((item) => `${item.type}-${item.id}`)), [myList]);
-
-  const toggleMyList = useCallback((movie) => {
-    setMyList((prev) => {
-      const key = `${movie.type}-${movie.id}`;
-      const exists = prev.some((item) => `${item.type}-${item.id}` === key);
-      return exists ? prev.filter((item) => `${item.type}-${item.id}` !== key) : [movie, ...prev];
-    });
-  }, [setMyList]);
-
   const handleCardClick = useCallback((movie) => {
-    startTransition(() => {
-      setSelectedMovie(movie);
-    });
-  }, []);
+    navigate(`/${movie.type || "movie"}/${movie.id}`);
+  }, [navigate]);
 
   return (
     <main className="space-y-0 pb-10">
@@ -235,13 +223,6 @@ const Home = () => {
       )}
 
       </div>
-      <Modal
-        movie={selectedMovie}
-        onClose={() => setSelectedMovie(null)}
-        onToggleList={toggleMyList}
-        isInList={selectedMovie ? myListIds.has(`${selectedMovie.type}-${selectedMovie.id}`) : false}
-        onOpenMovie={setSelectedMovie}
-      />
     </main>
   );
 };
