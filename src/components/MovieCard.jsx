@@ -1,10 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { getTrailerKey, getVideos } from "../services/api";
-
-const YT_SRC = (key) => `https://www.youtube.com/embed/${key}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline=1`;
+import React from "react";
 
 const MovieCard = ({ item, onClick }) => {
-  const poster = `https://image.tmdb.org/t/p/w500${item.posterPath}`;
+  const poster = `https://image.tmdb.org/t/p/w300${item.posterPath}`;
 
   return (
     <div
@@ -15,6 +12,7 @@ const MovieCard = ({ item, onClick }) => {
         <img
           src={poster}
           alt={item.title || item.name}
+          loading="lazy"
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         />
         {item.vote_average > 0 && (
@@ -27,4 +25,4 @@ const MovieCard = ({ item, onClick }) => {
   );
 };
 
-export default MovieCard;
+export default React.memo(MovieCard);

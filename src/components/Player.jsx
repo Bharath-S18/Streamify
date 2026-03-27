@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { config } from "../services/api";
 
 const Player = ({
@@ -103,4 +103,4 @@ const Player = ({
   );
 };
 
-export default Player;
+export default React.memo(Player);

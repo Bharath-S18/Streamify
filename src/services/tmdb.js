@@ -14,6 +14,25 @@ const client = axios.create({
   timeout: 12000
 });
 
+const REQUEST_CACHE_TTL_MS = 3 * 60 * 1000;
+const responseCache = new Map();
+const inflightRequests = new Map();
+
+const stableStringify = (value) => {
+  if (!value || typeof value !== "object") {
+    return JSON.stringify(value);
+  }
+
+  if (Array.isArray(value)) {
+    return `[${value.map(stableStringify).join(",")}]`;
+  }
+
+  return `{${Object.keys(value)
+    .sort()
+    .map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`)
+    .join(",")}}`;
+};
+
 const request = async (url, params = {}) => {
   const headers = {};
   const finalParams = { ...params };
@@ -26,8 +45,34 @@ const request = async (url, params = {}) => {
     }
   }
 
-  const response = await client.get(url, { params: finalParams, headers });
-  return response.data;
+  const cacheKey = `${url}::${stableStringify(finalParams)}::${headers.Authorization || ""}`;
+  const cached = responseCache.get(cacheKey);
+  const now = Date.now();
+
+  if (cached && cached.expiresAt > now) {
+    return cached.data;
+  }
+
+  if (inflightRequests.has(cacheKey)) {
+    return inflightRequests.get(cacheKey);
+  }
+
+  const requestPromise = client
+    .get(url, { params: finalParams, headers })
+    .then((response) => {
+      responseCache.set(cacheKey, {
+        data: response.data,
+        expiresAt: now + REQUEST_CACHE_TTL_MS
+      });
+      return response.data;
+    })
+    .finally(() => {
+      inflightRequests.delete(cacheKey);
+    });
+
+  inflightRequests.set(cacheKey, requestPromise);
+
+  return requestPromise;
 };
 
 const normalizeMedia = (item, fallbackType = "movie") => ({

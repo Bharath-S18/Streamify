@@ -1,3 +1,5 @@
+import React from "react";
+
 const badgeText = (type) => (type === "tv" ? "TV SHOW" : "MOVIE");
 
 const SimilarRow = ({ items, onCardClick }) => {
@@ -45,4 +47,4 @@ const SimilarRow = ({ items, onCardClick }) => {
   );
 };
 
-export default SimilarRow;
+export default React.memo(SimilarRow);

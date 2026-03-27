@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
 import HeroBanner from "../components/HeroBanner";
 import Modal from "../components/Modal";
 import MovieRow from "../components/MovieRow";
@@ -14,11 +14,31 @@ import {
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const LIST_KEY = "streamify-my-list-v1";
+const TRENDING_CACHE_KEY = "streamify-trending-cache-v1";
+
+const readCachedTrending = () => {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  try {
+    const raw = window.localStorage.getItem(TRENDING_CACHE_KEY);
+    if (!raw) {
+      return [];
+    }
+
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
 
 const Home = () => {
+  const [cachedTrending] = useState(() => readCachedTrending());
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState({
-    trending: [],
+    trending: cachedTrending.slice(0, 20),
     popular: [],
     topRated: []
   });
@@ -30,11 +50,24 @@ const Home = () => {
     let mounted = true;
 
     const loadHome = async () => {
-      setLoading(true);
+      setLoading(cachedTrending.length === 0);
 
       try {
-        const [trending, popular, topRated, genres] = await Promise.all([
-          getTrending(),
+        // Fetch hero-critical content first so LCP can render earlier.
+        const trending = await getTrending();
+
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(TRENDING_CACHE_KEY, JSON.stringify(trending.slice(0, 20)));
+        }
+
+        if (mounted) {
+          setRows((prev) => ({
+            ...prev,
+            trending: trending.slice(0, 20)
+          }));
+        }
+
+        const [popular, topRated, genres] = await Promise.all([
           getPopularMovies(),
           getTopRatedMovies(),
           getMovieGenres()
@@ -78,35 +111,35 @@ const Home = () => {
     };
   }, []);
 
-  const featuredMovie = useMemo(() => {
-    if (!rows.trending.length) {
-      return null;
-    }
-
-    const randomIndex = Math.floor(Math.random() * rows.trending.length);
-    return rows.trending[randomIndex];
-  }, [rows.trending]);
+  const featuredMovie = useMemo(() => rows.trending[0] || null, [rows.trending]);
 
   const myListIds = useMemo(() => new Set(myList.map((item) => `${item.type}-${item.id}`)), [myList]);
 
-  const toggleMyList = (movie) => {
+  const toggleMyList = useCallback((movie) => {
     setMyList((prev) => {
       const key = `${movie.type}-${movie.id}`;
       const exists = prev.some((item) => `${item.type}-${item.id}` === key);
       return exists ? prev.filter((item) => `${item.type}-${item.id}` !== key) : [movie, ...prev];
     });
-  };
+  }, [setMyList]);
+
+  const handleCardClick = useCallback((movie) => {
+    startTransition(() => {
+      setSelectedMovie(movie);
+    });
+  }, []);
 
   return (
     <main className="space-y-0 pb-10">
-      <HeroBanner movie={featuredMovie} movies={rows.trending} onOpen={setSelectedMovie} />
+      <HeroBanner movie={featuredMovie} movies={rows.trending} onOpen={handleCardClick} />
       <div className="space-y-10">
 
-      {!loading && rows.trending.length > 0 && (
-        <section className="relative mx-auto w-full max-w-[1600px] px-4 md:px-10">
+      <section className="relative mx-auto w-full max-w-[1600px] px-4 md:px-10 min-h-[430px]">
+        {!loading && rows.trending.length > 0 && (
           <SectionHeader />
+        )}
 
-          <div className="relative">
+        <div className="relative">
             {/* Left Arrow */}
             <button
               onClick={(e) => {
@@ -120,16 +153,23 @@ const Home = () => {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
             </button>
 
-            <div className="scroll-container no-scrollbar flex gap-8 overflow-x-auto px-4 pb-4">
-              {rows.trending.slice(0, 10).map((movie, index) => (
-                <Top10Card
-                  key={`top10-${movie.id}`}
-                  index={index + 1}
-                  movie={movie}
-                  onClick={setSelectedMovie}
-                />
-              ))}
-            </div>
+          <div className="scroll-container no-scrollbar flex gap-8 overflow-x-auto px-4 pb-4 min-h-[320px]">
+            {loading
+              ? Array.from({ length: 6 }).map((_, idx) => (
+                  <div key={`top10-skel-${idx}`} className="flex items-end gap-6 flex-shrink-0">
+                    <div className="h-24 w-14 md:h-28 md:w-16 rounded bg-app-card animate-pulse" />
+                    <div className="h-56 w-40 md:h-64 md:w-48 rounded-lg bg-app-card animate-pulse" />
+                  </div>
+                ))
+              : rows.trending.slice(0, 10).map((movie, index) => (
+                  <Top10Card
+                    key={`top10-${movie.id}`}
+                    index={index + 1}
+                    movie={movie}
+                    onClick={handleCardClick}
+                  />
+                ))}
+          </div>
 
             {/* Right Arrow */}
             <button
@@ -143,9 +183,8 @@ const Home = () => {
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
             </button>
-          </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {loading ? (
         <div className="mx-auto w-full max-w-[1600px] space-y-6 px-4 md:px-10">
@@ -166,19 +205,19 @@ const Home = () => {
             title="Trending Now"
             category="trending"
             items={rows.trending}
-            onCardClick={setSelectedMovie}
+            onCardClick={handleCardClick}
           />
           <MovieRow
             title="Popular on Streamify"
             category="popular"
             items={rows.popular}
-            onCardClick={setSelectedMovie}
+            onCardClick={handleCardClick}
           />
           <MovieRow
             title="Top Rated"
             category="topRated"
             items={rows.topRated}
-            onCardClick={setSelectedMovie}
+            onCardClick={handleCardClick}
           />
 
           {genreRows.map((genre) => (
@@ -186,12 +225,12 @@ const Home = () => {
               key={genre.id}
               title={genre.name}
               items={genre.items}
-              onCardClick={setSelectedMovie}
+              onCardClick={handleCardClick}
               genreId={genre.id}
             />
           ))}
 
-          {myList.length > 0 && <MovieRow title="My List" items={myList} onCardClick={setSelectedMovie} />}
+          {myList.length > 0 && <MovieRow title="My List" items={myList} onCardClick={handleCardClick} />}
         </div>
       )}
 

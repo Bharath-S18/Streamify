@@ -60,7 +60,7 @@ const Modal = ({ movie, onClose, onToggleList, isInList, onOpenMovie }) => {
     .slice(0, 8);
 
   return (
-    <div className="fixed inset-0 z-[120] bg-black/75 p-3 backdrop-blur-[10px] md:p-6" onClick={onClose}>
+    <div className="fixed inset-0 z-[120] bg-black/75 p-3 backdrop-blur-sm md:p-6" onClick={onClose}>
       <div
         className="mx-auto max-h-[92vh] w-full max-w-6xl overflow-y-auto rounded-2xl border border-white/10 bg-[#090d15]"
         onClick={(event) => event.stopPropagation()}

@@ -1,4 +1,5 @@
 import { imageFromPath } from "../services/api";
+import React from "react";
 
 const CastRow = ({ cast }) => {
   return (
@@ -32,4 +33,4 @@ const CastRow = ({ cast }) => {
   );
 };
 
-export default CastRow;
+export default React.memo(CastRow);

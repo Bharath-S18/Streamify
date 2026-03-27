@@ -8,10 +8,10 @@ Streamify is a modern movie and TV discovery web app built with React + Vite. It
 - Movie/show rows by category
 - Reusable cards and modal previews
 - Search experience with debounced input
-- Watch page/player flow
-- "Similar titles" recommendations
-- Persistent UI state with local storage hooks
-- Responsive layout for desktop and mobile
+- Watch page with an embedded player (always starts from the beginning).
+- "My List" feature to save favorite movies and shows.
+- Dynamic content rows that fall back to popular content if a specific category is empty.
+- Responsive layout for desktop and mobile.
 
 ## 🧱 Tech Stack
 
@@ -23,31 +23,33 @@ Streamify is a modern movie and TV discovery web app built with React + Vite. It
 ## 📁 Project Structure
 
 ```text
-src/
-	components/
-		CastRow.jsx
-		HeroBanner.jsx
-		Modal.jsx
-		MovieCard.jsx
-		MovieRow.jsx
-		Navbar.jsx
-		Player.jsx
-		SimilarRow.jsx
-	hooks/
-		useDebounce.js
-		useLocalStorage.js
-	pages/
-		Home.jsx
-		Search.jsx
-		Watch.jsx
-	services/
-		api.js
-		tmdb.js
-	styles/
-		app.css
-	App.jsx
-	index.css
-	main.jsx
+/
+├── public/
+│   ├── index.html
+│   └── ...
+├── src/
+│   ├── components/
+│   │   ├── HeroBanner.jsx
+│   │   ├── Modal.jsx
+│   │   ├── MovieCard.jsx
+│   │   ├── MovieRow.jsx
+│   │   └── Navbar.jsx
+│   ├── hooks/
+│   │   ├── useDebounce.js
+│   │   └── useLocalStorage.js
+│   ├── pages/
+│   │   ├── Home.jsx
+│   │   ├── Search.jsx
+│   │   └── Watch.jsx
+│   ├── services/
+│   │   ├── api.js
+│   │   └── tmdb.js
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── package.json
+├── vite.config.js
+└── tailwind.config.js
 ```
 
 ## 🚀 Getting Started
@@ -112,6 +114,3 @@ Typical flow:
 
 Contributions are welcome! Open an issue for ideas/bugs or submit a pull request.
 
-## 📄 License
-
-This project is available under the MIT License.
